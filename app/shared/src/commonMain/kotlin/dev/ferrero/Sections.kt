@@ -109,7 +109,7 @@ fun Header(
             val isMobile = maxWidth < 768.dp
             
             Text(
-                text = "Ferrero.Dev",
+                text = "ferrero.dev",
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Black,
                 fontSize = 22.sp,
@@ -806,7 +806,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Ferrero.Dev",
+                            text = "ferrero.dev",
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontWeight = FontWeight.Black,
                             fontSize = 24.sp,
@@ -821,7 +821,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         )
                         Spacer(Modifier.height(24.dp))
                         Text(
-                            text = "\u00A9 2026 Ferrero.Dev. All rights reserved.",
+                            text = "\u00A9 2026 ferrero.dev. All rights reserved.",
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                             fontSize = 13.sp,
                             fontFamily = FontFamily.SansSerif,
@@ -840,7 +840,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                 Box(Modifier.fillMaxWidth()) {
                     Column(Modifier.align(Alignment.CenterStart)) {
                         Text(
-                            text = "Ferrero.Dev",
+                            text = "ferrero.dev",
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontWeight = FontWeight.Black,
                             fontSize = 24.sp,
@@ -855,7 +855,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         )
                         Spacer(Modifier.height(24.dp))
                         Text(
-                            text = "\u00A9 2026 Ferrero.Dev. All rights reserved.",
+                            text = "\u00A9 2026 ferrero.dev. All rights reserved.",
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                             fontSize = 13.sp,
                             fontFamily = FontFamily.SansSerif,
