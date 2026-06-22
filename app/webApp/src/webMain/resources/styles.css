@@ -8,10 +8,14 @@ html, body {
 
 body {
     background-color: #F4F1E8;
+    --spinner-track: #E7E2D3;
+    --spinner-head: #1F3D2B;
 }
 
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #1A1A18;
+        --spinner-track: #242422;
+        --spinner-head: #4C7B5D;
     }
 }

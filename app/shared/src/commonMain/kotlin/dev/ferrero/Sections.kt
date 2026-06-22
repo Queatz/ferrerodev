@@ -44,6 +44,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -491,9 +492,9 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .pointerHoverIcon(PointerIcon.Hand)
-            .clickable { onClick() }
             .background(MaterialTheme.colorScheme.background, RoundedCornerShape(BRAND_CORNER_RADIUS))
             .clip(RoundedCornerShape(BRAND_CORNER_RADIUS))
+            .clickable { onClick() }
     ) {
         // Edge-to-edge "imagery" placeholder (no stock photos).
         Box(
@@ -578,14 +579,6 @@ private fun WorkDialog(
                             fontFamily = FontFamily.SansSerif,
                             modifier = Modifier.weight(1f)
                         )
-                        IconButton(onClick = onDismiss) {
-                            Text(
-                                "✕",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -818,6 +811,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
+                            textAlign = TextAlign.Center,
                         )
                         Spacer(Modifier.height(24.dp))
                         Text(
