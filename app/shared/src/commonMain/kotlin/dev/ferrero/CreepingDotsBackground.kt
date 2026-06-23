@@ -29,7 +29,7 @@ fun CreepingDotsBackground() {
     LaunchedEffect(Unit) {
         // Wait for first valid size
         while (canvasSize == IntSize.Zero) {
-            delay(128)
+            delay(64)
         }
         dotsState.initialize(canvasSize)
 
@@ -45,7 +45,7 @@ fun CreepingDotsBackground() {
             tick.value = currentTime
             
             // Reduce framerate to roughly 30fps to improve performance
-            delay(128)
+            delay(64)
         }
     }
 
@@ -67,7 +67,7 @@ fun CreepingDotsBackground() {
             if (dot.state == DotState.MOVING) {
                 val timeSec = tick.value / 1000f
                 val period = 2.0f // 4x slower interval than original 0.5s
-                val cycleTime = timeSec % period
+                val cycleTime = (timeSec + dot.glowOffset) % period
                 
                 // 3 parts off (1.5s), 1 part on (0.5s)
                 if (cycleTime > 1.5f) {
@@ -158,7 +158,7 @@ class DotSystem {
 
     fun initialize(size: IntSize) {
         if (initialized) return
-        repeat(60) {
+        repeat(20) {
             dots.add(
                 Dot(
                     Random.nextFloat() * size.width,
@@ -225,6 +225,7 @@ class Dot(var x: Float, var y: Float, var angle: Float) {
     val history = mutableListOf<Offset>()
     var targetAngle = angle
     var angleChangeTimer = 0f
+    val glowOffset = Random.nextFloat() * 2f
     
     var danceAxis = 0f
     var isReflected = false
