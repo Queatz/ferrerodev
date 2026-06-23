@@ -898,7 +898,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        SocialIcon(ZaloIcon, "https://zalo.me/840708739214")
+                        SocialIcon(ZaloIcon, "https://zalo.me/0708739214")
                         SocialIcon(PhoneIcon, "tel:+16502836374")
                         SocialIcon(EmailIcon, "mailto:jacobaferrero@gmail.com")
                     }

@@ -4,10 +4,8 @@
 
 shopt -s nullglob
 files=(
-  app/webApp/build/kotlin-webpack/js/productionExecutable/*.js
-  app/webApp/build/kotlin-webpack/js/productionExecutable/index.html
-  app/webApp/build/kotlin-webpack/js/productionExecutable/*.txt
-  app/webApp/build/kotlin-webpack/js/productionExecutable/*.ttf
+  app/webApp/build/kotlin-webpack/js/productionExecutable/*
+  app/webApp/build/processedResources/js/main/*
 )
 
 CONTROL_PATH="/tmp/ssh-%r@%h:%p"
