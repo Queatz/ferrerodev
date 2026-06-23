@@ -27,6 +27,7 @@ fun App() {
         var connectOffset by remember { mutableStateOf(0) }
 
         Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            CreepingDotsBackground()
             Column(
                 modifier = Modifier
                     .fillMaxSize()

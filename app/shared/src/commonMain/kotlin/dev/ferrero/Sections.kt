@@ -194,7 +194,6 @@ fun SplashSection() {
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 620.dp)
-            .background(MaterialTheme.colorScheme.background)
             .grain(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center,
     ) {
@@ -273,7 +272,7 @@ private val offerings = listOf(
 
 @Composable
 fun OfferingsSection(modifier: Modifier = Modifier) {
-    SectionContainer(background = MaterialTheme.colorScheme.background, modifier = modifier) { width ->
+    SectionContainer(background = Color.Transparent, modifier = modifier) { width ->
         val isMobile = width < 768
         Column(Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 96.dp)) {
             Text(
@@ -285,19 +284,14 @@ fun OfferingsSection(modifier: Modifier = Modifier) {
                 fontFamily = FontFamily.SansSerif,
             )
             Spacer(Modifier.height(12.dp))
-            Box(
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(40.dp))
-                    .padding(horizontal = 16.dp, vertical = 6.dp),
-            ) {
-                Text(
-                    text = "Aligned with New Earth principles",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = FontFamily.SansSerif,
-                )
-            }
+            Text(
+                text = "We take on your projects and align them with the stable, wealth-building principles of the New Earth. Conscious. Regenerative. Everlasting.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 18.sp,
+                lineHeight = 28.sp,
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.widthIn(max = 640.dp),
+            )
             Spacer(Modifier.height(48.dp))
             offerings.forEach { offering ->
                 OfferingCard(offering, isMobile)
@@ -440,7 +434,7 @@ private val projects = listOf(
 fun ProjectsSection(modifier: Modifier = Modifier) {
     var selectedProject by remember { mutableStateOf<Project?>(null) }
 
-    SectionContainer(background = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier) { width ->
+    SectionContainer(background = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f), modifier = modifier) { width ->
         val twoColumns = width > 760
         Column(Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 96.dp)) {
             Text(
@@ -643,7 +637,7 @@ private fun WorkDialog(
 // ----------------------------------------------------------------------------
 @Composable
 fun ConnectSection(modifier: Modifier = Modifier) {
-    SectionContainer(background = MaterialTheme.colorScheme.background, modifier = modifier) { width ->
+    SectionContainer(background = Color.Transparent, modifier = modifier) { width ->
         val twoColumns = width > 820
         Box(Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 96.dp)) {
             if (twoColumns) {
@@ -791,7 +785,7 @@ private fun brandFieldColors() = OutlinedTextFieldDefaults.colors(
 // ----------------------------------------------------------------------------
 @Composable
 fun FooterSection(modifier: Modifier = Modifier) {
-    SectionContainer(background = MaterialTheme.colorScheme.primary, modifier = modifier) { width ->
+    SectionContainer(background = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), modifier = modifier) { width ->
         val isMobile = width < 600
         
         Box(Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 56.dp)) {
