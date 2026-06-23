@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.IconButton
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +55,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.platform.LocalUriHandler
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 private const val MAX_CONTENT_WIDTH = 1100
@@ -688,6 +692,9 @@ private fun ConnectForm() {
     var message by remember { mutableStateOf("") }
     var service by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    var isSending by remember { mutableStateOf(false) }
+    var isSent by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     val services = listOf(
         "New Product Conception",
@@ -736,21 +743,54 @@ private fun ConnectForm() {
         Spacer(Modifier.height(16.dp))
         BrandField(message, { message = it }, "Message", minHeight = 140.dp)
         Spacer(Modifier.height(24.dp))
-        Button(
-            onClick = { },
-            shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-            contentPadding = PaddingValues(horizontal = 36.dp, vertical = 18.dp),
-        ) {
+        if (isSent) {
             Text(
-                text = "Send message",
+                text = "Thank you! Your message has been sent. We'll be in touch soon.",
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 fontFamily = FontFamily.SansSerif,
             )
+        } else {
+            Button(
+                onClick = {
+                    if (!isSending) {
+                        isSending = true
+                        scope.launch {
+                            // Fake API call.
+                            delay(1000)
+                            name = ""
+                            email = ""
+                            service = ""
+                            message = ""
+                            isSending = false
+                            isSent = true
+                        }
+                    }
+                },
+                enabled = !isSending,
+                shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                contentPadding = PaddingValues(horizontal = 36.dp, vertical = 18.dp),
+            ) {
+                if (isSending) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(
+                        text = "Send message",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.SansSerif,
+                    )
+                }
+            }
         }
     }
 }
