@@ -55,7 +55,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.platform.LocalUriHandler
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -289,7 +288,7 @@ fun OfferingsSection(modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "We take on your projects and align them with the stable, wealth-building principles of the New Earth. Conscious. Regenerative. Everlasting.",
+                text = "We take your projects and align them with the stable, wealth-building principles of the New Earth. Conscious. Regenerative. Everlasting.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 18.sp,
                 lineHeight = 28.sp,
@@ -694,6 +693,12 @@ private fun ConnectForm() {
     var expanded by remember { mutableStateOf(false) }
     var isSending by remember { mutableStateOf(false) }
     var isSent by remember { mutableStateOf(false) }
+
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var serviceError by remember { mutableStateOf<String?>(null) }
+    var messageError by remember { mutableStateOf<String?>(null) }
+    var sendError by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     val services = listOf(
@@ -706,42 +711,94 @@ private fun ConnectForm() {
     )
 
     Column(Modifier.fillMaxWidth()) {
-        BrandField(name, { name = it }, "Name")
+        BrandField(
+            name,
+            {
+                name = it
+                nameError = null
+                isSent = false
+                sendError = null
+            },
+            "Name",
+            enabled = !isSending,
+            errorText = nameError,
+        )
         Spacer(Modifier.height(16.dp))
-        BrandField(email, { email = it }, "Email")
+        BrandField(
+            email,
+            {
+                email = it
+                emailError = null
+                isSent = false
+                sendError = null
+            },
+            "Email",
+            enabled = !isSending,
+            errorText = emailError,
+        )
         Spacer(Modifier.height(16.dp))
 
-        Box(Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = service,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Service Needed") },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
-                colors = brandFieldColors(),
-            )
-            // Transparent overlay to capture clicks for the dropdown.
-            Box(
-                Modifier
-                    .matchParentSize()
-                    .clickable { expanded = true }
-            )
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                services.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            service = option
-                            expanded = false
-                        },
+        Column(Modifier.fillMaxWidth()) {
+            Box(Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = service,
+                    onValueChange = {},
+                    readOnly = true,
+                    enabled = !isSending,
+                    isError = serviceError != null,
+                    label = { Text("Service Needed") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
+                    colors = brandFieldColors(),
+                )
+                // Transparent overlay to capture clicks for the dropdown.
+                if (!isSending) {
+                    Box(
+                        Modifier
+                            .matchParentSize()
+                            .clickable { expanded = true }
                     )
                 }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    services.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                service = option
+                                serviceError = null
+                                isSent = false
+                                sendError = null
+                                expanded = false
+                            },
+                        )
+                    }
+                }
+            }
+            if (serviceError != null) {
+                Text(
+                    text = serviceError!!,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily.SansSerif,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                )
             }
         }
 
         Spacer(Modifier.height(16.dp))
-        BrandField(message, { message = it }, "Message", minHeight = 140.dp)
+        BrandField(
+            message,
+            {
+                message = it
+                messageError = null
+                isSent = false
+                sendError = null
+            },
+            "Message",
+            minHeight = 140.dp,
+            enabled = !isSending,
+            errorText = messageError,
+        )
         Spacer(Modifier.height(24.dp))
         if (isSent) {
             Text(
@@ -755,16 +812,34 @@ private fun ConnectForm() {
             Button(
                 onClick = {
                     if (!isSending) {
-                        isSending = true
-                        scope.launch {
-                            // Fake API call.
-                            delay(1000)
-                            name = ""
-                            email = ""
-                            service = ""
-                            message = ""
-                            isSending = false
-                            isSent = true
+                        nameError = if (name.isBlank()) "Please enter your name." else null
+                        emailError = when {
+                            email.isBlank() -> "Please enter your email."
+                            !isValidEmail(email) -> "Please enter a valid email address."
+                            else -> null
+                        }
+                        serviceError = if (service.isBlank()) "Please select a service." else null
+                        messageError = if (message.isBlank()) "Please enter a message." else null
+                        sendError = null
+
+                        val isValid = nameError == null && emailError == null &&
+                            serviceError == null && messageError == null
+                        if (isValid) {
+                            isSending = true
+                            scope.launch {
+                                try {
+                                    sendContactMessage(name, email, service, message)
+                                    name = ""
+                                    email = ""
+                                    service = ""
+                                    message = ""
+                                    isSent = true
+                                } catch (e: Throwable) {
+                                    sendError = "Something went wrong sending your message. Please try again."
+                                } finally {
+                                    isSending = false
+                                }
+                            }
                         }
                     }
                 },
@@ -791,9 +866,23 @@ private fun ConnectForm() {
                     )
                 }
             }
+            if (sendError != null) {
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = sendError!!,
+                    color = MaterialTheme.colorScheme.error,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.SansSerif,
+                )
+            }
         }
     }
 }
+
+private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+
+private fun isValidEmail(email: String): Boolean = EMAIL_REGEX.matches(email.trim())
 
 @Composable
 private fun BrandField(
@@ -801,15 +890,30 @@ private fun BrandField(
     onValueChange: (String) -> Unit,
     label: String,
     minHeight: androidx.compose.ui.unit.Dp = 56.dp,
+    enabled: Boolean = true,
+    errorText: String? = null,
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth().heightIn(min = minHeight),
-        shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
-        colors = brandFieldColors(),
-    )
+    Column(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            enabled = enabled,
+            isError = errorText != null,
+            modifier = Modifier.fillMaxWidth().heightIn(min = minHeight),
+            shape = RoundedCornerShape(BRAND_CORNER_RADIUS),
+            colors = brandFieldColors(),
+        )
+        if (errorText != null) {
+            Text(
+                text = errorText,
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 13.sp,
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+            )
+        }
+    }
 }
 
 @Composable

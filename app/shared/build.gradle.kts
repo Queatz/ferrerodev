@@ -28,6 +28,8 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.clientCore)
+            implementation(libs.ktor.clientJs)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
