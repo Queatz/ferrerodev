@@ -29,7 +29,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.platform.LocalUriHandler
 import kotlin.math.absoluteValue
 
 private const val MAX_CONTENT_WIDTH = 1100
@@ -262,7 +266,7 @@ private val offerings = listOf(
     Offering(
         "05",
         "Complete Tech Solutions",
-        "End-to-end development and maintenance of your technology stack.",
+        "End-to-end development and upkeep. Great if you have no tech team yet.",
         "SW"
     ),
 )
@@ -807,7 +811,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text = "Worldwide \u00B7 Based in the USA and Vietnam",
+                            text = "We serve worldwide. \u00B7 Based in the US and Vietnam.",
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
@@ -825,9 +829,9 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        SocialIcon("in")
-                        SocialIcon("X")
-                        SocialIcon("gh")
+                        SocialIcon(ZaloIcon, "https://zalo.me/0708739214")
+                        SocialIcon(PhoneIcon, "tel:+16502836374")
+                        SocialIcon(EmailIcon, "mailto:jacobaferrero@gmail.com")
                     }
                 }
             } else {
@@ -842,7 +846,7 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text = "Worldwide \u00B7 Based in the USA and Vietnam",
+                            text = "We serve worldwide. \u00B7 Based in the USA and Vietnam.",
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
@@ -860,9 +864,9 @@ fun FooterSection(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        SocialIcon("in")
-                        SocialIcon("X")
-                        SocialIcon("gh")
+                        SocialIcon(ZaloIcon, "https://zalo.me/840708739214")
+                        SocialIcon(PhoneIcon, "tel:+16502836374")
+                        SocialIcon(EmailIcon, "mailto:jacobaferrero@gmail.com")
                     }
                 }
             }
@@ -871,19 +875,162 @@ fun FooterSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SocialIcon(label: String) {
+private fun SocialIcon(icon: ImageVector, url: String? = null) {
+    val uriHandler = LocalUriHandler.current
     Box(
         modifier = Modifier
             .size(40.dp)
-            .border(1.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f), RoundedCornerShape(20.dp)),
+            .border(1.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(20.dp))
+            .then(
+                if (url != null) Modifier.clickable { uriHandler.openUri(url) }
+                else Modifier
+            )
+            .pointerHoverIcon(PointerIcon.Hand),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = label,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.size(20.dp)
         )
     }
 }
+
+private val EmailIcon = ImageVector.Builder(
+    name = "Email",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).path(fill = androidx.compose.ui.graphics.SolidColor(Color.Black)) {
+    moveTo(20f, 4f)
+    horizontalLineTo(4f)
+    curveTo(2.9f, 4f, 2.01f, 4.9f, 2.01f, 6f)
+    lineTo(2f, 18f)
+    curveTo(2f, 19.1f, 2.9f, 20f, 4f, 20f)
+    horizontalLineTo(20f)
+    curveTo(21.1f, 20f, 22f, 19.1f, 22f, 18f)
+    lineTo(22f, 6f)
+    curveTo(22f, 4.9f, 21.1f, 4f, 20f, 4f)
+    close()
+    moveTo(20f, 18f)
+    horizontalLineTo(4f)
+    lineTo(4f, 8f)
+    lineTo(12f, 13f)
+    lineTo(20f, 8f)
+    lineTo(20f, 18f)
+    close()
+    moveTo(12f, 11f)
+    lineTo(4f, 6f)
+    horizontalLineTo(20f)
+    lineTo(12f, 11f)
+    close()
+}.build()
+
+private val PhoneIcon = ImageVector.Builder(
+    name = "Phone",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).path(fill = androidx.compose.ui.graphics.SolidColor(Color.Black)) {
+    moveTo(6.62f, 10.79f)
+    curveTo(8.06f, 13.62f, 10.38f, 15.94f, 13.21f, 17.38f)
+    lineTo(15.41f, 15.18f)
+    curveTo(15.69f, 14.9f, 16.08f, 14.82f, 16.43f, 14.93f)
+    curveTo(17.55f, 15.3f, 18.75f, 15.5f, 20f, 15.5f)
+    curveTo(20.55f, 15.5f, 21f, 15.95f, 21f, 16.5f)
+    lineTo(21f, 20f)
+    curveTo(21f, 20.55f, 20.55f, 21f, 20f, 21f)
+    curveTo(10.61f, 21f, 3f, 13.39f, 3f, 4f)
+    curveTo(3f, 3.45f, 3.45f, 3f, 4f, 3f)
+    lineTo(7.5f, 3f)
+    curveTo(8.05f, 3f, 8.5f, 3.45f, 8.5f, 4f)
+    curveTo(8.5f, 5.25f, 8.7f, 6.45f, 9.07f, 7.57f)
+    curveTo(9.18f, 7.92f, 9.1f, 8.31f, 8.82f, 8.59f)
+    lineTo(6.62f, 10.79f)
+    close()
+}.build()
+
+private val ZaloIcon = ImageVector.Builder(
+    name = "Zalo",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).path(fill = androidx.compose.ui.graphics.SolidColor(Color.Black)) {
+    // Background bubble
+    moveTo(1.5f, 5.25f)
+    curveTo(1.5f, 3.45f, 2.95f, 2f, 4.75f, 2f)
+    horizontalLineTo(19.25f)
+    curveTo(21.05f, 2f, 22.5f, 3.45f, 22.5f, 5.25f)
+    verticalLineTo(15.75f)
+    curveTo(22.5f, 17.55f, 21.05f, 19f, 19.25f, 19f)
+    horizontalLineTo(12.75f)
+    lineTo(8.25f, 22f)
+    verticalLineTo(19f)
+    horizontalLineTo(4.75f)
+    curveTo(2.95f, 19f, 1.5f, 17.55f, 1.5f, 15.75f)
+    verticalLineTo(5.25f)
+    close()
+
+    // Letter 'Z'
+    moveTo(7.5f, 13.5f)
+    horizontalLineTo(4.5f)
+    verticalLineTo(12.5f)
+    lineTo(6.5f, 8.5f)
+    horizontalLineTo(4.5f)
+    verticalLineTo(7.5f)
+    horizontalLineTo(7.5f)
+    verticalLineTo(8.5f)
+    lineTo(5.5f, 12.5f)
+    horizontalLineTo(7.5f)
+    verticalLineTo(13.5f)
+    close()
+
+    // Letter 'a'
+    moveTo(11.5f, 11f)
+    curveTo(11.5f, 12.5f, 10.5f, 13.5f, 9f, 13.5f)
+    curveTo(7.5f, 13.5f, 6.5f, 12.5f, 6.5f, 11f)
+    curveTo(6.5f, 9.5f, 7.5f, 8.5f, 9f, 8.5f)
+    curveTo(10.5f, 8.5f, 11.5f, 9.5f, 11.5f, 11f)
+    close()
+    moveTo(11.5f, 13.5f)
+    verticalLineTo(8.5f)
+    horizontalLineTo(12.5f)
+    verticalLineTo(13.5f)
+    horizontalLineTo(11.5f)
+    close()
+    // 'a' inner cutout (counter)
+    moveTo(10.5f, 11f)
+    curveTo(10.5f, 10.17f, 9.83f, 9.5f, 9f, 9.5f)
+    curveTo(8.17f, 9.5f, 7.5f, 10.17f, 7.5f, 11f)
+    curveTo(7.5f, 11.83f, 8.17f, 12.5f, 9f, 12.5f)
+    curveTo(9.83f, 12.5f, 10.5f, 11.83f, 10.5f, 11f)
+    close()
+
+    // Letter 'l'
+    moveTo(14.5f, 6f)
+    verticalLineTo(13.5f)
+    horizontalLineTo(15.5f)
+    verticalLineTo(6f)
+    horizontalLineTo(14.5f)
+    close()
+
+    // Letter 'o'
+    moveTo(20.5f, 11f)
+    curveTo(20.5f, 12.5f, 19.5f, 13.5f, 18f, 13.5f)
+    curveTo(16.5f, 13.5f, 15.5f, 12.5f, 15.5f, 11f)
+    curveTo(15.5f, 9.5f, 16.5f, 8.5f, 18f, 8.5f)
+    curveTo(19.5f, 8.5f, 20.5f, 9.5f, 20.5f, 11f)
+    close()
+    // 'o' inner cutout
+    moveTo(19.5f, 11f)
+    curveTo(19.5f, 10.17f, 18.83f, 9.5f, 18f, 9.5f)
+    curveTo(17.17f, 9.5f, 16.5f, 10.17f, 16.5f, 11f)
+    curveTo(16.5f, 11.83f, 17.17f, 12.5f, 18f, 12.5f)
+    curveTo(18.83f, 12.5f, 19.5f, 11.83f, 19.5f, 11f)
+    close()
+}.build()
