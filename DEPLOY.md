@@ -4,7 +4,7 @@
 First, install the dependencies.
 
 ```shell
-apt update && apt install certbot nodejs npm nginx python3-certbot-nginx
+apt update && apt install nano certbot nodejs npm nginx python3-certbot-nginx
 ```
 
 Ensure your domain DNS is pointed to the server's IP address.
