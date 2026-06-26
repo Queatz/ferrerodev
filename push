@@ -17,11 +17,21 @@ HOST="root@ferrero.dev"
 echo "Opening connection to $HOST..."
 ssh -o ControlMaster=auto -o ControlPath="$CONTROL_PATH" -o ControlPersist=600 "$HOST" exit || exit 1
 
+# Clear previously uploaded resource directories so the recursive `put -r`
+# below does not double-nest them (e.g. composeResources/composeResources).
+ssh -o ControlPath="$CONTROL_PATH" "$HOST" "rm -rf /root/ui/composeResources /root/ui/works"
+
 # 2. Run parallel uploads using the established connection.
 for i in {0..2}; do
   (
     for ((j=i; j<${#files[@]}; j+=3)); do
-      echo "put \"${files[j]}\""
+      if [ -d "${files[j]}" ]; then
+        # Recursively upload directories (e.g. composeResources/) so nested
+        # image resources are not skipped by sftp's non-recursive `put`.
+        echo "put -r \"${files[j]}\""
+      else
+        echo "put \"${files[j]}\""
+      fi
     done | sftp -o ControlPath="$CONTROL_PATH" "$HOST":/root/ui
   ) &
 done
