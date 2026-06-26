@@ -1,5 +1,6 @@
 package dev.ferrero
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -47,6 +48,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,14 +57,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.platform.LocalUriHandler
-import kotlinx.coroutines.launch
+import ferrerodev.app.shared.generated.resources.Res
+import ferrerodev.app.shared.generated.resources.work_hi_town
+import ferrerodev.app.shared.generated.resources.work_microscopic_disambiguation
+import ferrerodev.app.shared.generated.resources.work_one_verandah
+import ferrerodev.app.shared.generated.resources.work_saigon_quest
+import ferrerodev.app.shared.generated.resources.work_saigon_town
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.absoluteValue
 
 private const val MAX_CONTENT_WIDTH = 1100
 internal val BRAND_CORNER_RADIUS = 24.dp
 
 /** Subtle, deterministic paper/grain texture drawn behind a surface. */
-private fun Modifier.grain(color: Color, density: Int = 1400): Modifier = drawBehind {
+private fun Modifier.grain(color: Color, density: Int = 140): Modifier = drawBehind {
     var seed = 0x9E3779B9L
     fun next(): Float {
         seed = (seed * 6364136223846793005L + 1442695040888963407L)
@@ -403,33 +412,39 @@ private data class Project(
     val name: String,
     val impact: String,
     val tags: List<String>,
-    val color: Color,
+    val image: DrawableResource,
 )
 
 private val projects = listOf(
     Project(
-        "Verdant Grid",
-        "Cut energy waste 30% across a regional renewable network.",
-        listOf("Hardware", "IoT"),
-        Color(0xFF24503A),
+        "Hi Town",
+        "A hyper-local social platform.",
+        listOf("Web", "Social"),
+        Res.drawable.work_hi_town,
     ),
     Project(
-        "Mycelia",
-        "A marketplace connecting regenerative farms to local kitchens.",
-        listOf("Software", "Platform"),
-        Color(0xFF2E2A22),
+        "Microscopic Disambiguation",
+        "A powerful language learning tool to disambiguate real-life situations.",
+        listOf("App", "Education"),
+        Res.drawable.work_microscopic_disambiguation,
     ),
     Project(
-        "Atlas Reconceive",
-        "Reimagined a legacy logistics suite into a modern toolkit.",
-        listOf("Reconception", "SW"),
-        Color(0xFF1F3D2B),
+        "One Verandah App",
+        "A resident-powered services platform for an apartment complex in Vietnam.",
+        listOf("Web", "Platform"),
+        Res.drawable.work_one_verandah,
     ),
     Project(
-        "Pulse Lab",
-        "Embedded sensing wearable that augmented a clinical research team.",
-        listOf("Hardware", "Augmentation"),
-        Color(0xFF3A3A33),
+        "Saigon Quest",
+        "A mixed-reality adventure game that combines online and offline locations into a single quest.",
+        listOf("Web", "3D"),
+        Res.drawable.work_saigon_quest,
+    ),
+    Project(
+        "Saigon Town",
+        "A 'popular person' directory for cities.",
+        listOf("Web", "Social"),
+        Res.drawable.work_saigon_town,
     ),
 )
 
@@ -497,13 +512,14 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
             .clip(RoundedCornerShape(BRAND_CORNER_RADIUS))
             .clickable { onClick() }
     ) {
-        // Edge-to-edge "imagery" placeholder (no stock photos).
-        Box(
+        // Edge-to-edge project screenshot.
+        Image(
+            painter = painterResource(project.image),
+            contentDescription = project.name,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp)
-                .background(project.color)
-                .grain(Color.White.copy(alpha = 0.06f), density = 900),
+                .height(280.dp),
         )
         Column(Modifier.padding(28.dp)) {
             Text(
@@ -558,12 +574,13 @@ private fun WorkDialog(
                     .clickable(enabled = false) {} // Prevent clicks on dialog from dismissing
             ) {
                 // Header imagery
-                Box(
+                Image(
+                    painter = painterResource(project.image),
+                    contentDescription = project.name,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(if (isMobile) 200.dp else 300.dp)
-                        .background(project.color)
-                        .grain(Color.White.copy(alpha = 0.06f), density = 900),
+                        .height(if (isMobile) 200.dp else 300.dp),
                 )
 
                 Column(Modifier.padding(32.dp)) {
